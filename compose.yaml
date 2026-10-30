@@ -1,0 +1,37 @@
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: localonly
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:php8.3-apache
+    depends_on:
+      - db
+      - mailpit
+    ports:
+      - "127.0.0.1:8080:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: localonly
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DEBUG: "1"
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./healthcare-clinic-tools:/var/www/html/wp-content/plugins/healthcare-clinic-tools
+      - ./local-dev/mu-plugins:/var/www/html/wp-content/mu-plugins:ro
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "127.0.0.1:8025:8025"
+
+volumes:
+  db_data:
+  wordpress_data:
