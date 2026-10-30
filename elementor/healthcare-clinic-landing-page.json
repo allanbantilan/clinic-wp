@@ -386,7 +386,7 @@
           "elType": "widget",
           "widgetType": "html",
           "settings": {
-            "html": "<div class=\"hc-site\"><footer class=\"hc-footer\"><div class=\"hc-wrap hc-footer-grid\"><div><div class=\"hc-brand\"><span class=\"hc-logo\" aria-hidden=\"true\">✳</span> Health Checkup Clinic.</div><p>Clearer steps toward caring for yourself.<br>Portfolio concept; no clinical services are provided through this website.</p></div><div><p>Health information is general guidance.<br>It does not replace medical advice.</p><a href=\"#top\">Back to top ↑</a></div></div></footer></div>"
+            "html": "<div class=\"hc-site\"><footer class=\"hc-footer\"><div class=\"hc-wrap hc-footer-grid\"><div><div class=\"hc-brand\"><span class=\"hc-logo\" aria-hidden=\"true\">✳</span> Health Checkup Clinic.</div><p>Clearer steps toward caring for yourself.</p></div><div><p>Health information is general guidance.<br>It does not replace medical advice.</p><a href=\"#top\">Back to top ↑</a></div></div></footer></div>"
           },
           "elements": []
         }

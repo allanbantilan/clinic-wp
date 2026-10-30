@@ -1,6 +1,19 @@
 # Healthcare Clinic Landing Page
 
-A portfolio concept built with **WordPress + Elementor** for a healthcare clinic. Elementor owns the page layout and copy; a small plugin supplies the calculator, package builder, package comparison, HMO search, request form, contact links, and optional clinic schema. The public-facing site uses the descriptive name **Health Checkup Clinic**.
+A WordPress website for presenting healthcare checkup packages and receiving visit inquiries. **Health Checkup Clinic** is the site name; the page layout and copy are editable in Elementor, while a small plugin handles package selection, pricing, and requests.
+
+## Tech stack
+
+| Technology | Role |
+| --- | --- |
+| WordPress and PHP | Content management, shortcode rendering, server-side form validation, and email |
+| Elementor (free) | Editable landing page layout and content |
+| Vanilla JavaScript and CSS | Checkup guide, live package pricing, HMO search, and responsive styling |
+| MySQL | WordPress content and settings |
+| Docker Compose and Mailpit | Local WordPress environment and captured test email |
+| Node.js built-in test runner | Checks for the pricing logic and Elementor template |
+
+Visitors can compare three packages, see how optional tests affect the total, use a non-diagnostic guide, search HMO names, and send a package request. The request form emails both the site administrator and the visitor; it does not confirm an appointment or take payment.
 
 ## Test locally with Docker Desktop
 
@@ -26,7 +39,7 @@ For a PHP syntax check after the containers start, run `docker compose exec word
 
 The page uses Elementor HTML widgets for its static sections and Elementor Shortcode widgets for functional tools. Static copy and section markup can be changed in those HTML widgets. The active package data lives in `hc_packages()` and `hc_addons()` in [healthcare-clinic-tools.php](healthcare-clinic-tools/healthcare-clinic-tools.php); keep clinical test descriptions and prices verified before publication.
 
-## Add real clinic details
+## Configure clinic details before launch
 
 Edit the contact Shortcode widget in Elementor. Example:
 
@@ -36,7 +49,7 @@ Edit the contact Shortcode widget in Elementor. Example:
 
 These values are **examples only**. A phone number enables click-to-call; a valid WhatsApp number enables the floating chat button; an address enables the embedded map. MedicalClinic JSON-LD is printed only when both phone and address are set. Replace the generic clinic name in the plugin and Elementor template when adapting this for a client.
 
-Package and add-on prices are example estimates. The care section describes specialties without inventing clinicians or schedules, and the value cards avoid fabricated patient statistics and testimonials. The HMO list does **not** imply active coverage. Replace example prices and provider references with verified information, get a clinical review of checkup copy and preparation instructions, and update the privacy text for the client's mail and retention setup. Keep the calculator's non-diagnostic notice.
+The included package and add-on prices are starting values, not verified offers. Confirm each service, test, price, provider reference, and appointment process with the operating clinic before launch. The HMO list does **not** imply active coverage. Obtain a clinical review of checkup copy and preparation instructions, configure the real contact details and outgoing email, and update the privacy text for the clinic's mail and retention setup. Keep the calculator's non-diagnostic notice.
 
 The preparation copy follows [MedlinePlus guidance](https://medlineplus.gov/lab-tests/fasting-for-a-blood-test/) to ask the clinic whether fasting is needed and to avoid stopping medicines without advice. A clinician still needs to approve the final instructions for the clinic's actual tests.
 

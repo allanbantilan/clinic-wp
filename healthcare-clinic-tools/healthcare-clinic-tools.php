@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Healthcare Clinic Tools
  * Description: Interactive shortcodes for a healthcare clinic landing page.
- * Version: 1.0.2
+ * Version: 1.0.3
  * Requires PHP: 7.4
  */
 
@@ -31,6 +31,7 @@ add_action( 'wp_enqueue_scripts', function () {
 
 add_action( 'wp_head', function () {
 	if ( is_front_page() ) { echo '<meta name="description" content="Compare checkup packages, explore estimated prices, and request information about your next visit.">' . "\n"; }
+	if ( ! has_site_icon() ) { echo '<link rel="icon" href="' . esc_url( plugins_url( 'assets/site-icon.svg', __FILE__ ) ) . '" type="image/svg+xml">' . "\n"; }
 } );
 
 add_shortcode( 'hc_calculator', function () {
@@ -97,7 +98,7 @@ add_shortcode( 'hc_contact', function ( $atts ) {
 	$address = sanitize_text_field( $atts['address'] );
 	$hours = sanitize_text_field( $atts['hours'] );
 	ob_start(); ?>
-	<div class="hc-site"><section class="hc-section"><div class="hc-wrap hc-contact-grid"><div><p class="hc-kicker">Find us</p><h2>A calmer kind of clinic visit.</h2><p>Use the request form above to start a conversation about your checkup.</p><?php if ( $phone ) : ?><p><a class="hc-button" href="tel:<?php echo esc_attr( $phone ); ?>">Call <?php echo esc_html( $atts['phone'] ); ?></a></p><?php endif; ?><?php if ( $whatsapp && strlen( $whatsapp ) >= 8 && strlen( $whatsapp ) <= 15 ) : ?><p><a class="hc-button hc-button-secondary" href="https://wa.me/<?php echo esc_attr( $whatsapp ); ?>" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a></p><?php endif; ?></div><div class="hc-contact-card"><h3>Health Checkup Clinic</h3><?php if ( $address ) : ?><p><?php echo esc_html( $address ); ?></p><iframe class="hc-map" title="Map of clinic location" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=<?php echo esc_attr( rawurlencode( $address ) ); ?>&amp;output=embed"></iframe><?php else : ?><p>Ask for location details when planning your visit.</p><?php endif; ?><?php if ( $hours ) : ?><p><strong>Hours:</strong> <?php echo esc_html( $hours ); ?></p><?php endif; ?></div></div></section></div>
+	<div class="hc-site"><section class="hc-section"><div class="hc-wrap hc-contact-grid"><div><p class="hc-kicker">Get in touch</p><h2>Questions about a checkup?</h2><p>Use the request form above to ask about packages, pricing, and availability.</p><?php if ( $phone ) : ?><p><a class="hc-button" href="tel:<?php echo esc_attr( $phone ); ?>">Call <?php echo esc_html( $atts['phone'] ); ?></a></p><?php endif; ?><?php if ( $whatsapp && strlen( $whatsapp ) >= 8 && strlen( $whatsapp ) <= 15 ) : ?><p><a class="hc-button hc-button-secondary" href="https://wa.me/<?php echo esc_attr( $whatsapp ); ?>" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a></p><?php endif; ?></div><div class="hc-contact-card"><h3>Health Checkup Clinic</h3><?php if ( $address ) : ?><p><?php echo esc_html( $address ); ?></p><iframe class="hc-map" title="Map of clinic location" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=<?php echo esc_attr( rawurlencode( $address ) ); ?>&amp;output=embed"></iframe><?php else : ?><p>Send a request for location and visit details.</p><?php endif; ?><?php if ( $hours ) : ?><p><strong>Hours:</strong> <?php echo esc_html( $hours ); ?></p><?php endif; ?></div></div></section></div>
 	<?php if ( $whatsapp && strlen( $whatsapp ) >= 8 && strlen( $whatsapp ) <= 15 ) : ?><a class="hc-chat" href="https://wa.me/<?php echo esc_attr( $whatsapp ); ?>" target="_blank" rel="noopener noreferrer" aria-label="Chat with Health Checkup Clinic on WhatsApp">Chat with us</a><?php endif; ?>
 	<?php if ( $phone && $address ) : ?><script type="application/ld+json"><?php echo wp_json_encode( array( '@context' => 'https://schema.org', '@type' => 'MedicalClinic', 'name' => 'Health Checkup Clinic', 'url' => home_url( '/' ), 'telephone' => $phone, 'address' => array( '@type' => 'PostalAddress', 'streetAddress' => $address ) ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ); ?></script><?php endif; ?>
 	<?php return ob_get_clean();

@@ -2,7 +2,7 @@
 
 **Problem:** A visitor to a clinic site may struggle to understand checkup options, costs, preparation, and insurance coverage.
 
-**Solution:** A calm Elementor landing page presents three packages, a non-diagnostic suggestion tool, a live price builder, a searchable HMO reference list, and a request form that carries the visitor's selection. Generic service cards stand in for unverified clinician profiles and testimonials.
+**Solution:** An Elementor landing page presents three packages, a non-diagnostic suggestion tool, a live price builder, a searchable HMO reference list, and a request form that carries the visitor's selection. Service-area cards explain the types of care without claiming specific clinicians or patient outcomes.
 
 **Tools:** WordPress, Elementor, a small PHP shortcode plugin, vanilla JavaScript, and one optimized generated photo.
 
