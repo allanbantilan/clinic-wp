@@ -15,6 +15,20 @@ A WordPress website for presenting healthcare checkup packages and receiving vis
 
 Visitors can compare three packages, see how optional tests affect the total, use a non-diagnostic guide, search HMO names, and send a package request. The request form emails both the site administrator and the visitor; it does not confirm an appointment or take payment.
 
+## Screenshots
+
+### Desktop homepage
+
+![Health Checkup Clinic homepage on desktop](docs/screenshots/desktop-home.png)
+
+### Checkup packages
+
+![Basic, Standard, and Executive checkup package cards](docs/screenshots/desktop-packages.png)
+
+### Mobile homepage
+
+<img src="docs/screenshots/mobile-home.png" alt="Health Checkup Clinic homepage on mobile" width="390">
+
 ## Test locally with Docker Desktop
 
 1. Start **Docker Desktop** and wait until its engine says it is running.
