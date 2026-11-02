@@ -1,0 +1,15 @@
+clinic-wp.duckdns.org {
+    reverse_proxy clinic-wordpress:80
+}
+
+product-hydration.duckdns.org {
+    reverse_proxy hydration-wordpress:80
+}
+
+home-search-wp.duckdns.org {
+    reverse_proxy search-wordpress:80
+}
+
+resto-reserve.duckdns.org {
+    reverse_proxy resto-wordpress:80
+}

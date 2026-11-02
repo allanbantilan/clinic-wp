@@ -1,0 +1,189 @@
+name: wordpress-sites
+
+x-db: &db
+  image: mariadb:11.4
+  restart: unless-stopped
+  environment:
+    MARIADB_DATABASE: wordpress
+    MARIADB_USER: wordpress
+    MARIADB_RANDOM_ROOT_PASSWORD: "yes"
+  healthcheck:
+    test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+    interval: 10s
+    timeout: 5s
+    retries: 20
+
+x-wordpress: &wordpress
+  image: wordpress:php8.3-apache
+  restart: unless-stopped
+  environment: &wp-env
+    WORDPRESS_DB_USER: wordpress
+    WORDPRESS_DB_NAME: wordpress
+    WORDPRESS_DEBUG: "0"
+    WORDPRESS_CONFIG_EXTRA: |
+      if (($$_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https') $$_SERVER['HTTPS'] = 'on';
+      define('FORCE_SSL_ADMIN', true);
+      define('DISALLOW_FILE_EDIT', true);
+      define('WP_ENVIRONMENT_TYPE', 'production');
+  networks: [default, apps_default]
+
+x-cli: &cli
+  image: wordpress:cli-php8.3
+  profiles: [tools]
+  user: "33:33"
+  environment: &cli-env
+    HOME: /tmp
+    WORDPRESS_DB_USER: wordpress
+    WORDPRESS_DB_NAME: wordpress
+  networks: [default]
+
+services:
+  clinic-db:
+    <<: *db
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: ${CLINIC_DB_PASSWORD:?}
+      MARIADB_RANDOM_ROOT_PASSWORD: "yes"
+    volumes: [clinic_db:/var/lib/mysql]
+  clinic:
+    <<: *wordpress
+    depends_on:
+      clinic-db: {condition: service_healthy}
+    environment:
+      <<: *wp-env
+      WORDPRESS_DB_HOST: clinic-db
+      WORDPRESS_DB_PASSWORD: ${CLINIC_DB_PASSWORD:?}
+    volumes:
+      - clinic_wp:/var/www/html
+      - ./src/clinic/healthcare-clinic-tools:/var/www/html/wp-content/plugins/healthcare-clinic-tools:ro
+    networks:
+      default: {}
+      apps_default: {aliases: [clinic-wordpress]}
+  clinic-cli:
+    <<: *cli
+    environment:
+      <<: *cli-env
+      WORDPRESS_DB_HOST: clinic-db
+      WORDPRESS_DB_PASSWORD: ${CLINIC_DB_PASSWORD:?}
+    volumes:
+      - clinic_wp:/var/www/html
+      - ./src/clinic/healthcare-clinic-tools:/var/www/html/wp-content/plugins/healthcare-clinic-tools:ro
+      - ./src/clinic/elementor:/setup/elementor:ro
+      - ./import-clinic.php:/setup/import-clinic.php:ro
+      - ./configure-mail.php:/setup/configure-mail.php:ro
+
+  hydration-db:
+    <<: *db
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: ${HYDRATION_DB_PASSWORD:?}
+      MARIADB_RANDOM_ROOT_PASSWORD: "yes"
+    volumes: [hydration_db:/var/lib/mysql]
+  hydration:
+    <<: *wordpress
+    depends_on:
+      hydration-db: {condition: service_healthy}
+    environment:
+      <<: *wp-env
+      WORDPRESS_DB_HOST: hydration-db
+      WORDPRESS_DB_PASSWORD: ${HYDRATION_DB_PASSWORD:?}
+      AERA_MAILCHIMP_API_KEY: ${AERA_MAILCHIMP_API_KEY:-}
+      AERA_MAILCHIMP_AUDIENCE_ID: ${AERA_MAILCHIMP_AUDIENCE_ID:-}
+    volumes:
+      - hydration_wp:/var/www/html
+      - ./src/hydration:/var/www/html/wp-content/themes/hydration-launch:ro
+    networks:
+      default: {}
+      apps_default: {aliases: [hydration-wordpress]}
+  hydration-cli:
+    <<: *cli
+    environment:
+      <<: *cli-env
+      WORDPRESS_DB_HOST: hydration-db
+      WORDPRESS_DB_PASSWORD: ${HYDRATION_DB_PASSWORD:?}
+    volumes:
+      - hydration_wp:/var/www/html
+      - ./src/hydration:/var/www/html/wp-content/themes/hydration-launch:ro
+
+  search-db:
+    <<: *db
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: ${SEARCH_DB_PASSWORD:?}
+      MARIADB_RANDOM_ROOT_PASSWORD: "yes"
+    volumes: [search_db:/var/lib/mysql]
+  search:
+    <<: *wordpress
+    depends_on:
+      search-db: {condition: service_healthy}
+    environment:
+      <<: *wp-env
+      WORDPRESS_DB_HOST: search-db
+      WORDPRESS_DB_PASSWORD: ${SEARCH_DB_PASSWORD:?}
+    volumes:
+      - search_wp:/var/www/html
+      - ./src/search/property-search:/var/www/html/wp-content/themes/property-search:ro
+      - ./src/search/estate-search:/var/www/html/wp-content/plugins/estate-search:ro
+    networks:
+      default: {}
+      apps_default: {aliases: [search-wordpress]}
+  search-cli:
+    <<: *cli
+    environment:
+      <<: *cli-env
+      WORDPRESS_DB_HOST: search-db
+      WORDPRESS_DB_PASSWORD: ${SEARCH_DB_PASSWORD:?}
+    volumes:
+      - search_wp:/var/www/html
+      - ./src/search/property-search:/var/www/html/wp-content/themes/property-search:ro
+      - ./src/search/estate-search:/var/www/html/wp-content/plugins/estate-search:ro
+      - ./configure-mail.php:/setup/configure-mail.php:ro
+
+  resto-db:
+    <<: *db
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: ${RESTO_DB_PASSWORD:?}
+      MARIADB_RANDOM_ROOT_PASSWORD: "yes"
+    volumes: [resto_db:/var/lib/mysql]
+  resto:
+    <<: *wordpress
+    depends_on:
+      resto-db: {condition: service_healthy}
+    environment:
+      <<: *wp-env
+      WORDPRESS_DB_HOST: resto-db
+      WORDPRESS_DB_PASSWORD: ${RESTO_DB_PASSWORD:?}
+    volumes:
+      - resto_wp:/var/www/html
+      - ./src/resto/theme:/var/www/html/wp-content/themes/salo:ro
+    networks:
+      default: {}
+      apps_default: {aliases: [resto-wordpress]}
+  resto-cli:
+    <<: *cli
+    environment:
+      <<: *cli-env
+      WORDPRESS_DB_HOST: resto-db
+      WORDPRESS_DB_PASSWORD: ${RESTO_DB_PASSWORD:?}
+    volumes:
+      - resto_wp:/var/www/html
+      - ./src/resto/theme:/var/www/html/wp-content/themes/salo:ro
+      - ./configure-mail.php:/setup/configure-mail.php:ro
+
+volumes:
+  clinic_db:
+  clinic_wp:
+  hydration_db:
+  hydration_wp:
+  search_db:
+  search_wp:
+  resto_db:
+  resto_wp:
+
+networks:
+  apps_default: {external: true}

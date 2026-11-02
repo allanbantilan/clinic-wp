@@ -1,0 +1,1 @@
+17 2 * * * root /bin/bash /root/deploy/wordpress-sites/backup.sh >> /var/log/wordpress-sites-backup.log 2>&1

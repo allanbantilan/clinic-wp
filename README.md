@@ -2,6 +2,15 @@
 
 A WordPress website for presenting healthcare checkup packages and receiving visit inquiries. **Health Checkup Clinic** is the site name; the page layout and copy are editable in Elementor, while a small plugin handles package selection, pricing, and requests.
 
+## App flow
+
+1. A visitor compares the checkup packages and can use the browser-only guide to explore a starting option.
+2. Choosing a package and optional tests updates the displayed estimate and fills the request form.
+3. On submission, the plugin validates the choices and recalculates the price on the server, then emails the site administrator and visitor. The request does not book an appointment or take payment.
+4. Staff follow up through email; the plugin does not store requests in WordPress.
+
+The live site is [clinic-wp.duckdns.org](https://clinic-wp.duckdns.org/). The shared VPS Compose, Caddy, and backup setup is in [deployment/](deployment/README.md). Transactional mail uses FluentSMTP with Brevo.
+
 ## Tech stack
 
 | Technology | Role |
